@@ -52,6 +52,30 @@ function ItemDAO(database) {
         *
         */
 
+        var aggregate = [
+                            { $group: {
+                                "_id": "$category",
+                                "num": {$sum: 1}
+                            }},
+                            { $sort: {
+                                "_id": 1
+                            }}
+                        ];
+
+        var cursor = this.db.collection('item').aggregate(aggregate).toArray(function(err, results) {
+            assert.equal(null, err);
+            var total_items = results.reduce(function(a,b) {
+                return a + b.num;
+            }, 0);
+            results.unshift({
+                _id: "All",
+                num: total_items
+            });
+            // console.log(results);
+            callback(results);
+        });
+
+
         var categories = [];
         var category = {
             _id: "All",
@@ -65,7 +89,7 @@ function ItemDAO(database) {
         // TODO Include the following line in the appropriate
         // place within your code to pass the categories array to the
         // callback.
-        callback(categories);
+        // callback(categories);
     }
 
 
@@ -95,17 +119,18 @@ function ItemDAO(database) {
          */
         var query = {};
         if (category && category != "All") {
-            query = { "cateogry": category }
+            // query = { "cateogry": category };
+            query.category = category;
         }
         var options = {
             "limit": itemsPerPage,
             "skip": (itemsPerPage * page) || 0,
-            "sort": "_id"
+            "sort": {"_id": 1}
         };
 
         var cursor = this.db.collection('item').find(query, options).toArray(function(err, results) {
             assert.equal(null, err);
-            console.log(results);
+            // console.log(results);
             callback(results);
         });
 
