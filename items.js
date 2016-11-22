@@ -122,40 +122,39 @@ function ItemDAO(database) {
          *
          */
 
-        var item = this.createDummyItem();
-        var items = [];
-        for (var i=0; i<5; i++) {
-            items.push(item);
+        var findQuery = {};
+        if (query != "") {
+            // query = { "cateogry": category };
+            findQuery = { "$text": { "$search": query } };
         }
+        var options = {
+            "limit": itemsPerPage,
+            "skip": (itemsPerPage * page) || 0,
+            "sort": {"_id": 1}
+        };
 
-        // TODO-lab2A Replace all code above (in this method).
-
-        // TODO Include the following line in the appropriate
-        // place within your code to pass the items for the selected page
-        // of search results to the callback.
-        callback(items);
+        var cursor = this.db.collection('item').find(findQuery, options).toArray(function(err, results) {
+            assert.equal(null, err);
+            console.log(results);
+            callback(results);
+        });
     }
 
 
     this.getNumSearchItems = function(query, callback) {
         "use strict";
+        
+        var findQuery = {};
+        if (query != "") {
+            // query = { "cateogry": category };
+            findQuery = { "$text": { "$search": query } };
+        }
 
-        var numItems = 0;
-
-        /*
-        * TODO-lab2B
-        *
-        * LAB #2B: Using the value of the query parameter passed to this
-        * method, count the number of items in the "item" collection matching
-        * a text search. Pass the count to the callback function.
-        *
-        * getNumSearchItems() depends on the same text index as searchItems().
-        * Before implementing this method, ensure that you've already created
-        * a SINGLE text index on title, slogan, and description. You should
-        * simply do this in the mongo shell.
-        */
-
-        callback(numItems);
+        var cursor = this.db.collection('item').count(findQuery, function(err, results) {
+            assert.equal(null, err);
+            console.log(results);
+            callback(results);
+        });
     }
 
 
