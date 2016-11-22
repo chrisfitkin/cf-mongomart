@@ -87,8 +87,8 @@ function ItemDAO(database) {
         
         var cursor = this.db.collection('item').count(query, function(err, results) {
             assert.equal(null, err);
-            console.log("getNumItems :: callback");
-            console.log(results);
+            // console.log("getNumItems :: callback");
+            // console.log(results);
             callback(results);
         });
 
@@ -135,7 +135,7 @@ function ItemDAO(database) {
 
         var cursor = this.db.collection('item').find(findQuery, options).toArray(function(err, results) {
             assert.equal(null, err);
-            console.log(results);
+            // console.log(results);
             callback(results);
         });
     }
@@ -143,7 +143,7 @@ function ItemDAO(database) {
 
     this.getNumSearchItems = function(query, callback) {
         "use strict";
-        
+
         var findQuery = {};
         if (query != "") {
             // query = { "cateogry": category };
@@ -152,7 +152,7 @@ function ItemDAO(database) {
 
         var cursor = this.db.collection('item').count(findQuery, function(err, results) {
             assert.equal(null, err);
-            console.log(results);
+            // console.log(results);
             callback(results);
         });
     }
@@ -171,14 +171,21 @@ function ItemDAO(database) {
          *
          */
 
-        var item = this.createDummyItem();
+
+        var cursor = this.db.collection('item').find({"_id": itemId}).toArray(function(err, results) {
+            assert.equal(null, err);
+            console.log(results);
+            callback(results[0]);
+        });
+
+        // var item = this.createDummyItem();
 
         // TODO-lab3 Replace all code above (in this method).
 
         // TODO Include the following line in the appropriate
         // place within your code to pass the matching item
         // to the callback.
-        callback(item);
+        // callback(item);
     }
 
 
