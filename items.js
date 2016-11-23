@@ -174,7 +174,7 @@ function ItemDAO(database) {
 
         var cursor = this.db.collection('item').find({"_id": itemId}).toArray(function(err, results) {
             assert.equal(null, err);
-            console.log(results);
+            // console.log(results);
             callback(results[0]);
         });
 
@@ -223,6 +223,25 @@ function ItemDAO(database) {
             date: Date.now()
         }
 
+        var db = this.db;
+
+        this.getItem(itemId, function(doc) {
+            if(doc.reviews) {
+                doc.reviews.push(reviewDoc);
+            } else {
+                doc.reviews = [reviewDoc];
+            }
+            console.log("=========== UPDATING ===========");
+            console.log(doc);
+            db.collection("item").update({"_id":itemId}, doc, function(err, doc) {
+                assert.equal(null, err);
+                console.log("=========== UPDATIED ===========");
+                console.log(doc);
+                callback(doc);
+            });
+        })
+
+        /*
 
         // TODO replace the following two lines with your code that will
         // update the document with a new review.
@@ -242,7 +261,6 @@ function ItemDAO(database) {
                 })
             });
 
-            /*
 
         // TODO replace the following two lines with your code that will
         // update the document with a new review.
