@@ -224,7 +224,7 @@ function ItemDAO(database) {
         }
 
         var db = this.db;
-
+        
         this.getItem(itemId, function(doc) {
             if(doc.reviews) {
                 doc.reviews.push(reviewDoc);
@@ -241,37 +241,6 @@ function ItemDAO(database) {
             });
         })
 
-        /*
-
-        // TODO replace the following two lines with your code that will
-        // update the document with a new review.
-        this.db.collection("item").find({"_id": itemId})
-            .limit(1)
-            .toArray(function(err, doc) {
-                assert.equal(null, err);
-                // console.log(doc);
-                // if(doc.reviews) {
-                //     doc.reviews.push(reviewDoc);
-                // } else {
-                    doc.reviews = [reviewDoc];
-                // }
-                console.log(doc);
-                this.db.collection("item").save(doc,{"w":1}, function(err, result) {
-                    callback(doc);
-                })
-            });
-
-
-        // TODO replace the following two lines with your code that will
-        // update the document with a new review.
-        var doc = this.createDummyItem();
-        doc.reviews = [reviewDoc];
-
-        // TODO Include the following line in the appropriate
-        // place within your code to pass the updated doc to the
-        // callback.
-        callback(doc);
-        */
     }
 
 
